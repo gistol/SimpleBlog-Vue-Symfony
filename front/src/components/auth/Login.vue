@@ -20,7 +20,7 @@
         },
         watch: {
             logged() {
-                console.log('You are logged');
+                this.$router.push({path: '/'});
             }
         },
         computed: {

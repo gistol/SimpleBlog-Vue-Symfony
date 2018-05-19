@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import jwt from 'jsonwebtoken';
 import publicKey from './../../jwt/public';
 
@@ -11,17 +12,16 @@ const getters = {
 
 const actions = {
     login({commit}, loginData) {
-        axios.post('login_check', loginData)
+        Vue.http.post('login_check', loginData)
+            .then(response => response.json())
             .then(result => {
-                console.log(result);
-                jwt.verify(result.data.token, publicKey, error => {
+                jwt.verify(result.token, publicKey, error => {
                     if(!error) {
-                        localStorage.setItem('token', result.data.token);
+                        localStorage.setItem('token', result.token);
                         commit('LOGGED');
                     }
                 })
-            })
-        ;
+            });
     }
 };
 
