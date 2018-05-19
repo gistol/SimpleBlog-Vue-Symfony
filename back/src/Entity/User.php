@@ -4,6 +4,7 @@ namespace App\Entity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -18,19 +19,39 @@ class User implements UserInterface, \Serializable
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $username;
 
     /**
+     * @ORM\Column(type="string", length=255, unique=true)
+     */
+    private $email;
+
+    /**
      * @ORM\Column(type="string", length=255)
+     */
+    private $name;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $surname;
+
+    /**@Assert\NotBlank()
+     * @Assert\Length(max=4096)
+     */
+    private $plainPassword;
+
+    /**
+     * @ORM\Column(type="string", length=64)
      */
     private $password;
 
     /**
-    * @ORM\Column(type="json")
-    */
-    private $roles = [];
+     * @ORM\Column(type="json")
+     */
+    private $roles = ['ROLE_USER'];
 
     public function getId(): ?int
     {
@@ -47,6 +68,46 @@ class User implements UserInterface, \Serializable
         $this->username = $username;
     }
 
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): void
+    {
+        $this->email = $email;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function getSurname(): ?string
+    {
+        return $this->surname;
+    }
+
+    public function setSurname(string $surname): void
+    {
+        $this->surname = $surname;
+    }
+
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(string $password): void
+    {
+        $this->plainPassword = $password;
+    }
+
     public function getPassword(): ?string
     {
         return $this->password;
@@ -59,12 +120,7 @@ class User implements UserInterface, \Serializable
 
     public function getRoles(): array
     {
-        $roles = $this->roles;
-
-        if (empty($roles))
-            $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
+        return $this->roles;
     }
 
     public function setRoles(array $roles): void
@@ -81,12 +137,12 @@ class User implements UserInterface, \Serializable
 
     public function serialize(): string
     {
-        return serialize([$this->id, $this->username, $this->password]);
+        return serialize([$this->id, $this->username, $this->name, $this->surname, $this->email, $this->password]);
     }
 
     public function unserialize($serialized): void
     {
-        [$this->id, $this->username, $this->password] = unserialize($serialized, ['allowed_classes' => false]);
+        [$this->id, $this->username, $this->name, $this->surname, $this->email, $this->password] = unserialize($serialized, ['allowed_classes' => false]);
     }
 
 }

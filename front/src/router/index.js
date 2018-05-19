@@ -3,7 +3,8 @@ import Router from 'vue-router';
 
 import Home from './../views/Home';
 import LoginComponent from './../components/auth/Login';
-import HomeComponenten from './../components/home/Home';
+import RegisterComponent from './../components/auth/Register';
+import HomeComponent from './../components/home/Home';
 
 
 Vue.use(Router);
@@ -13,18 +14,23 @@ export default new Router({
     routes: [
         {
             path: '/',
-            name: 'home',
+            name: 'homepage',
             component: Home,
             children: [
                 {
                     path: '/',
                     name: 'home',
-                    component: HomeComponenten,
+                    component: HomeComponent,
                 },
                 {
                     path: '/login',
                     name: 'login',
                     component: LoginComponent,
+                },
+                {
+                    path: '/register',
+                    name: 'register',
+                    component: RegisterComponent,
                 }
             ]
 

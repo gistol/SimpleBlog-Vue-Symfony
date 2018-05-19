@@ -3,16 +3,18 @@ import jwt from 'jsonwebtoken';
 import publicKey from './../../jwt/public';
 
 const state = {
-    logged: false
+    logged: false,
+    registered: false
 };
 
 const getters = {
-    logged: state => state.logged
+    logged: state => state.logged,
+    registered: state => state.registered
 };
 
 const actions = {
     login({commit}, loginData) {
-        Vue.http.post('login_check', loginData)
+        Vue.http.post('auth/login', loginData)
             .then(response => response.json())
             .then(result => {
                 jwt.verify(result.token, publicKey, error => {
@@ -22,12 +24,22 @@ const actions = {
                     }
                 })
             });
+    },
+    register({commit}, registerData) {
+        Vue.http.post('auth/register', registerData)
+            .then(response => response.json())
+            .then(result => {
+                commit('REGISTERED')
+            });
     }
 };
 
 const mutations = {
     LOGGED(state) {
         state.logged = true;
+    },
+    REGISTERED(state) {
+        state.registered = true;
     }
 };
 

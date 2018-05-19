@@ -1,7 +1,12 @@
 api_login_check:
-    path: /api/login_check
+    path: /api/auth/login
 
 tests:
     resource: App\Controller\Api\TestController
     type: rest
     prefix: /api
+
+registration:
+    resource: App\Controller\Api\RegistrationController
+    type: rest
+    prefix: /api/auth
