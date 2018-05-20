@@ -8,6 +8,8 @@
 
 namespace App\Controller\Api;
 
+use App\Entity\Post;
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Routing\ClassResourceInterface;
@@ -22,15 +24,24 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class PostController extends FOSRestController implements ClassResourceInterface
 {
+    private $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
+    public function getAction(Request $request): JsonResponse
+    {
+        $posts = $this->em->getRepository(Post::class)->findAll();
+
+        return $this->json($posts);
+    }
+
     /**
      * @Rest\Get(path="/post/{id}")
      */
     public function getOneAction(Request $request): JsonResponse
-    {
-        return $this->json($request->query->all());
-    }
-
-    public function getAllAction(Request $request): JsonResponse
     {
         return $this->json($request->query->all());
     }
