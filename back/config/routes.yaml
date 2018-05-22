@@ -10,3 +10,8 @@ post:
     resource: App\Controller\Api\PostController
     type: rest
     prefix: /api
+
+comment:
+    resource: App\Controller\Api\PostController
+    type: rest
+    prefix: /api

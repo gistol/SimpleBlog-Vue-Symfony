@@ -8,6 +8,7 @@
 
 namespace App\Controller\Api;
 
+use App\Entity\Comment;
 use App\Entity\Post;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\FOSRestController;
@@ -18,49 +19,42 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Rest\RouteResource(
- *     "Post",
+ *     "Comment",
  *     pluralize=false
  * )
  */
-class PostController extends FOSRestController implements ClassResourceInterface
+class CommentController extends FOSRestController implements ClassResourceInterface
 {
     private $em;
 
     public function __construct(EntityManagerInterface $em)
     {
-        $this->em = $em->getRepository(Post::class);
+        $this->em = $em->getRepository(Comment::class);
     }
 
-    public function getAction(Request $request): JsonResponse
+    public function getAction(): JsonResponse
     {
-        $param = $request->query->all();
-        $posts = $this->em->findAllFromTo($param['start'], $param['limit']);
-        $numberPosts = $this->em->findNumberRows();
-
-        return $this->json([
-            'posts' => $posts,
-            'number' => $numberPosts
-        ]);
+        return $this->json($this->em->findAll());
     }
 
     /**
-     * @Rest\Get(path="/post/{slug}")
+     * @Rest\Get(path="/comment/{slug}")
      */
     public function getOneAction(Post $post): JsonResponse
     {
-        return $this->json($post);
+        return $this->json($post->getComments());
     }
 
     /**
-     * @Rest\Get(path="/post/add")
+     * @Rest\Get(path="/comment/add/{slug}")
      */
-    public function postAction(Request $request): JsonResponse
+    public function postAction(Request $request, Post $post): JsonResponse
     {
         return $this->json($request->request->all());
     }
 
     /**
-     * @Rest\Get(path="/post/{id}")
+     * @Rest\Get(path="/comment/{id}")
      */
     public function putAction(Request $request): JsonResponse
     {
@@ -68,7 +62,7 @@ class PostController extends FOSRestController implements ClassResourceInterface
     }
 
     /**
-     * @Rest\Get(path="/post/{id}")
+     * @Rest\Get(path="/comment/{id}")
      */
     public function deleteAction(Request $request): JsonResponse
     {

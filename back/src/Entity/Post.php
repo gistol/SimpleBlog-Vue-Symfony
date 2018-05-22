@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PostRepository")
@@ -33,6 +35,17 @@ class Post
     private $content;
 
     /**
+     * @ORM\OneToMany(
+     *      targetEntity="Comment",
+     *      mappedBy="post",
+     *      orphanRemoval=true,
+     *      cascade={"persist"}
+     * )
+     * @ORM\OrderBy({"publishedAt": "DESC"})
+     */
+    private $comments;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $publishedAt;
@@ -49,6 +62,7 @@ class Post
 
     public function __construct()
     {
+        $this->comments = new ArrayCollection();
         $this->publishedAt = new \DateTime();
         $this->updatedAt = new \DateTime();
     }
@@ -89,6 +103,25 @@ class Post
     public function getContent(): ?string
     {
         return $this->content;
+    }
+
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+    public function addComment(?Comment $comment): void
+    {
+        $comment->setPost($this);
+
+        if (!$this->comments->contains($comment))
+            $this->comments->add($comment);
+
+    }
+    public function removeComment(Comment $comment): void
+    {
+        $comment->setPost(null);
+
+        $this->comments->removeElement($comment);
     }
 
     public function setContent(string $content): void
