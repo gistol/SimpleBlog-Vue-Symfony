@@ -19,7 +19,6 @@ const actions = {
         Vue.http.get('post', {params:  data})
             .then(response => response.json())
             .then(result => {
-                console.log(data);
                 commit('NUMBER', result.number[1]);
                 commit('ITEMS', result.posts);
             })

@@ -19,11 +19,7 @@
         name: "Home",
         data() {
             return {
-                data: {
-                    start: 0,
-                    limit: 10,
-                    id: this.$route.params.id
-                },
+                limit: 10
             }
         },
         computed: {
@@ -32,37 +28,31 @@
                 number: 'number',
             })
         },
-        watch: {
-            '$route'(to, from) {
-                this.data.id = to.params.id;
-                let id = this.data.id ? this.data.id : 1;
-
-                if(id === 1) this.data.start =  0;
-                else this.data.start = id * this.data.limit - 10;
-
-                this.$store.dispatch('items', this.data);
-            }
+        created() {
+            this.loadPosts(this.$route.params.id);
         },
         methods: {
+            loadPosts(id) {
+                const data = {
+                    limit: this.limit
+                };
+                if (id > 1)
+                    data.start = id * data.limit - 10;
+                else
+                    data.start = 0;
+
+                this.$store.dispatch('items', data);
+            },
             paginate(number) {
                 const numbers = [];
 
-                number /= this.data.limit;
+                number /= this.limit;
 
                 for(let i = 1; i <= Math.ceil(number); i++)
                     numbers.push(i);
 
                 return numbers;
-            },
-        },
-        created() {
-            let id = this.data.id ? this.data.id : 1;
-
-            if(id === 1) this.data.start =  0;
-            else this.data.start = id * this.data.limit - 10;
-
-
-            this.$store.dispatch('items', this.data);
+            }
         }
     }
 </script>
