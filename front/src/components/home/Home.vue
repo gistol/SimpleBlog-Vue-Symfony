@@ -1,7 +1,7 @@
 <template>
     <div id="home">
         <div v-for="item in items">
-            <h2>{{ item.title }}</h2>
+            <h2><router-link :to="'/post/' + item.slug">{{ item.title }}</router-link></h2>
             <p>{{ item.content }}</p>
         </div>
         <ul>
@@ -16,7 +16,6 @@
     import { mapGetters } from 'vuex';
 
     export default {
-        name: "Home",
         data() {
             return {
                 limit: 10
@@ -29,13 +28,12 @@
             })
         },
         created() {
-            this.loadPosts(this.$route.params.id);
+            this.getPosts(this.$route.params.id);
         },
         methods: {
-            loadPosts(id) {
-                const data = {
-                    limit: this.limit
-                };
+            getPosts(id) {
+                const data = {limit: this.limit};
+
                 if (id > 1)
                     data.start = id * data.limit - 10;
                 else

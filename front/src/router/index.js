@@ -7,6 +7,7 @@ import Admin from './../views/Admin';
 import LoginComponent from './../components/auth/Login';
 import RegisterComponent from './../components/auth/Register';
 import HomeComponent from './../components/home/Home';
+import PostComponent from './../components/home/Post';
 
 Vue.use(Router);
 
@@ -20,7 +21,7 @@ export default new Router({
             children: [
                 {
                     path: '/',
-                    name: 'home',
+                    name: 'posts',
                     component: HomeComponent,
                 },
                 {
@@ -44,8 +45,13 @@ export default new Router({
                     }
                 },
                 {
+                    path: '/post/:slug',
+                    name: 'post',
+                    component: PostComponent
+                },
+                {
                     path: '/:id',
-                    name: 'home',
+                    name: 'postsPaginate',
                     component: HomeComponent,
                 },
             ]

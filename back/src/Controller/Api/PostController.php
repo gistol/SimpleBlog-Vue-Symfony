@@ -44,11 +44,11 @@ class PostController extends FOSRestController implements ClassResourceInterface
     }
 
     /**
-     * @Rest\Get(path="/post/{id}")
+     * @Rest\Get(path="/post/{slug}")
      */
-    public function getOneAction(Request $request): JsonResponse
+    public function getOneAction(Post $post): JsonResponse
     {
-        return $this->json($request->query->all());
+        return $this->json($post);
     }
 
     /**

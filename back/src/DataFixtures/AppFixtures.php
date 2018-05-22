@@ -60,7 +60,7 @@ class AppFixtures extends Fixture
             $title = $this->faker->company;
             $post->setTitle($title);
             $post->setSlug(Slug::slugger($title));
-            $post->setContent($this->faker->text);
+            $post->setContent($this->faker->text(800));
 
             $em->persist($post);
         }

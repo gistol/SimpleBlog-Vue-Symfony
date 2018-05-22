@@ -22,12 +22,22 @@ const actions = {
                 commit('NUMBER', result.number[1]);
                 commit('ITEMS', result.posts);
             })
+    },
+    item({commit}, data) {
+        Vue.http.get('post/' + data)
+            .then(response => response.json())
+            .then(result => {
+                commit('ITEM', result);
+            })
     }
 };
 
 const mutations = {
     ITEMS(state, items) {
         state.items = items;
+    },
+    ITEM(state, item) {
+        state.item = item;
     },
     NUMBER(state, number) {
         state.number = number;
