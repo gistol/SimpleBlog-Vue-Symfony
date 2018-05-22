@@ -2,14 +2,21 @@ import Vue from 'vue';
 import jwt from 'jsonwebtoken';
 import publicKey from './../../jwt/public';
 
+const types = {
+    LOGGED: 'LOGGED',
+    LOGOUT: 'LOGOUT'
+};
+
 const state = {
-    logged: false,
+    logged: localStorage.getItem('token'),
+    roles: localStorage.getItem('roles'),
     registered: false
 };
 
 const getters = {
     logged: state => state.logged,
-    registered: state => state.registered
+    roles: state => state.roles,
+    registered: state =>  state.registered
 };
 
 const actions = {
@@ -19,24 +26,36 @@ const actions = {
             .then(result => {
                 jwt.verify(result.token, publicKey, error => {
                     if(!error) {
+                        let jwtData = result.token.split('.')[1];
+                        let decodedJwtJsonData = window.atob(jwtData);
                         localStorage.setItem('token', result.token);
+                        localStorage.setItem('roles', JSON.parse(decodedJwtJsonData).roles);
+
                         commit('LOGGED');
                     }
                 })
             });
     },
+    logout({commit}) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('roles');
+        commit('LOGOUT');
+    },
     register({commit}, registerData) {
         Vue.http.post('auth/register', registerData)
             .then(response => response.json())
             .then(result => {
-                commit('REGISTERED')
+                commit('REGISTERED');
             });
     }
 };
 
 const mutations = {
-    LOGGED(state) {
+    [types.LOGGED](state) {
         state.logged = true;
+    },
+    [types.LOGOUT](state) {
+        state.logged = false
     },
     REGISTERED(state) {
         state.registered = true;

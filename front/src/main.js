@@ -8,6 +8,7 @@ import router from './router';
 import env from './env';
 
 Vue.use(Resource);
+
 Vue.http.options.root = env.API_URL;
 Vue.http.interceptors.push((request, next) => {
     if(localStorage.getItem('token'))

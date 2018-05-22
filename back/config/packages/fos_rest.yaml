@@ -5,6 +5,6 @@ fos_rest:
 
     format_listener:
         rules:
-            - { priorities: ['json', 'xml'], fallback_format: json, prefer_extension: false }
+            - { priorities: ['json', 'html'], fallback_format: json, prefer_extension: false }
     view:
         view_response_listener: true

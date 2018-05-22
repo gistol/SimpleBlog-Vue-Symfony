@@ -24,18 +24,23 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class PostController extends FOSRestController implements ClassResourceInterface
 {
-    private $em;
+    private $emp;
 
     public function __construct(EntityManagerInterface $em)
     {
-        $this->em = $em;
+        $this->emp = $em->getRepository(Post::class);
     }
 
     public function getAction(Request $request): JsonResponse
     {
-        $posts = $this->em->getRepository(Post::class)->findAll();
+        $param = $request->query->all();
+        $posts = $this->emp->findAllFromTo($param['start'], $param['limit']);
+        $numberPosts = $this->emp->findNumberRows();
 
-        return $this->json($posts);
+        return $this->json([
+            'posts' => $posts,
+            'number' => $numberPosts
+        ]);
     }
 
     /**

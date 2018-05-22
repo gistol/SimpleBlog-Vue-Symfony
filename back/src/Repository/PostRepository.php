@@ -19,6 +19,24 @@ class PostRepository extends ServiceEntityRepository
         parent::__construct($registry, Post::class);
     }
 
+    public function findAllFromTo(int $start = 0, int $limit = 10): ?array
+    {
+        return $this->createQueryBuilder('p')
+            ->setMaxResults($limit)
+            ->setFirstResult($start)
+            ->orderBy('p.id', 'DESC')
+            ->getQuery()
+            ->getArrayResult();
+    }
+
+    public function findNumberRows()
+    {
+        return $this->createQueryBuilder('p')
+            ->select('COUNT(p)')
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
 //    /**
 //     * @return Post[] Returns an array of Post objects
 //     */
