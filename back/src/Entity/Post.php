@@ -5,10 +5,12 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PostRepository")
  * @ORM\HasLifecycleCallbacks
+ * @UniqueEntity("slug")
  */
 class Post
 {
@@ -20,17 +22,17 @@ class Post
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(name="title", type="string", length=255)
      */
     private $title;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(name="slug", type="string", length=255)
      */
     private $slug;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(name="content", type="text")
      */
     private $content;
 
@@ -46,17 +48,17 @@ class Post
     private $comments;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(name="published_at", type="datetime")
      */
     private $publishedAt;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(name="updated_at",type="datetime")
      */
     private $updatedAt;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(name="deleted_at", type="datetime", nullable=true)
      */
     private $deletedAt;
 

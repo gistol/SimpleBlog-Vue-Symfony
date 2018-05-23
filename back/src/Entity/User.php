@@ -1,13 +1,15 @@
 <?php
 
 namespace App\Entity;
-use Symfony\Component\Security\Core\User\UserInterface;
 
+use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @UniqueEntity(fields={"email", "username"})
  */
 class User implements UserInterface, \Serializable
 {
@@ -19,22 +21,22 @@ class User implements UserInterface, \Serializable
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(name="username", type="string", length=255)
      */
     private $username;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(name="email", type="string", length=255)
      */
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(name="surname", type="string", length=255)
      */
     private $surname;
 
@@ -44,14 +46,19 @@ class User implements UserInterface, \Serializable
     private $plainPassword;
 
     /**
-     * @ORM\Column(type="string", length=64)
+     * @ORM\Column(name="password", type="string", length=64)
      */
     private $password;
 
     /**
-     * @ORM\Column(type="json")
+     * @ORM\Column(name="roles", type="text")
      */
-    private $roles = ['ROLE_USER'];
+    private $roles = [];
+
+    public function __construct()
+    {
+        $this->roles = json_encode(['ROLE_USER']);
+    }
 
     public function getId(): ?int
     {
@@ -118,14 +125,14 @@ class User implements UserInterface, \Serializable
         $this->password = $password;
     }
 
+    public function setRoles(array $roles): void
+    {
+        $this->roles = json_encode($roles);
+    }
+
     public function getRoles(): array
     {
         return $this->roles;
-    }
-
-    public function setRoles(array $roles): void
-    {
-        $this->roles = $roles;
     }
 
     public function getSalt(): ?string

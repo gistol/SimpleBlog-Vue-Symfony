@@ -18,7 +18,7 @@ class Comment
     private $id;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(name="content", type="text")
      */
     private $content;
 
@@ -35,17 +35,17 @@ class Comment
     private $author;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(name="published_at", type="datetime")
      */
     private $publishedAt;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(name="updated_at",type="datetime")
      */
     private $updatedAt;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(name="deleted_at", type="datetime", nullable=true)
      */
     private $deletedAt;
 
