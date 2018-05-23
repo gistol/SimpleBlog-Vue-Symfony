@@ -1,43 +1,43 @@
 import Vue from 'vue';
 
 const state = {
-    items: [],
-    item: {},
+    posts: [],
+    post: {},
     number: 0,
     refresh: 0
 };
 
 const getters = {
-    items: state => state.items,
-    item: state => state.item,
+    posts: state => state.posts,
+    post: state => state.post,
     number: state => state.number,
     refresh: state => state.refresh,
 };
 
 const actions = {
-    items({commit}, data) {
+    posts({commit}, data) {
         Vue.http.get('post', {params:  data})
             .then(response => response.json())
             .then(result => {
                 commit('NUMBER', result.number[1]);
-                commit('ITEMS', result.posts);
+                commit('POSTS', result.posts);
             })
     },
-    item({commit}, data) {
+    post({commit}, data) {
         Vue.http.get('post/' + data)
             .then(response => response.json())
             .then(result => {
-                commit('ITEM', result);
+                commit('POST', JSON.parse(result));
             })
     }
 };
 
 const mutations = {
-    ITEMS(state, items) {
-        state.items = items;
+    POSTS(state, posts) {
+        state.posts = posts;
     },
-    ITEM(state, item) {
-        state.item = item;
+    POST(state, post) {
+        state.post = post;
     },
     NUMBER(state, number) {
         state.number = number;

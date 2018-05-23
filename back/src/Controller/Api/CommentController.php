@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: ultra
- * Date: 20.05.18
- * Time: 14:54
- */
 
 namespace App\Controller\Api;
 
@@ -42,11 +36,16 @@ class CommentController extends FOSRestController implements ClassResourceInterf
      */
     public function getOneAction(Post $post): JsonResponse
     {
-        return $this->json($post->getComments());
+        $comments = [];
+
+        foreach($post->getComments() as $comment)
+            $comments[] = $comment->serialize();
+
+        return $this->json($comments);
     }
 
     /**
-     * @Rest\Get(path="/comment/add/{slug}")
+     * @Rest\Post(path="/comment/add/{slug}")
      */
     public function postAction(Request $request, Post $post): JsonResponse
     {
@@ -54,7 +53,7 @@ class CommentController extends FOSRestController implements ClassResourceInterf
     }
 
     /**
-     * @Rest\Get(path="/comment/{id}")
+     * @Rest\Put(path="/comment/{id}")
      */
     public function putAction(Request $request): JsonResponse
     {
@@ -62,7 +61,7 @@ class CommentController extends FOSRestController implements ClassResourceInterf
     }
 
     /**
-     * @Rest\Get(path="/comment/{id}")
+     * @Rest\Delete(path="/comment/{id}")
      */
     public function deleteAction(Request $request): JsonResponse
     {

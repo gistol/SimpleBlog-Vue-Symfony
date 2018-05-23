@@ -1,8 +1,8 @@
 <template>
     <div id="home">
-        <div v-for="item in items">
-            <h2><router-link :to="'/post/' + item.slug">{{ item.title }}</router-link></h2>
-            <p>{{ item.content }}</p>
+        <div v-for="post in posts">
+            <h2><router-link :to="'/post/' + post.slug">{{ post.title }}</router-link></h2>
+            <p>{{ post.content }}</p>
         </div>
         <ul>
             <li v-for="key in paginate(number)">
@@ -23,7 +23,7 @@
         },
         computed: {
             ...mapGetters({
-                items: 'items',
+                posts: 'posts',
                 number: 'number',
             })
         },
@@ -39,7 +39,7 @@
                 else
                     data.start = 0;
 
-                this.$store.dispatch('items', data);
+                this.$store.dispatch('posts', data);
             },
             paginate(number) {
                 const numbers = [];

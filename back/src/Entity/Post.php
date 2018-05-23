@@ -107,6 +107,11 @@ class Post
         return $this->content;
     }
 
+    public function setContent(string $content): void
+    {
+        $this->content = $content;
+    }
+
     public function getComments(): Collection
     {
         return $this->comments;
@@ -124,11 +129,6 @@ class Post
         $comment->setPost(null);
 
         $this->comments->removeElement($comment);
-    }
-
-    public function setContent(string $content): void
-    {
-        $this->content = $content;
     }
 
     public function getPublishedAt(): ?\DateTimeInterface

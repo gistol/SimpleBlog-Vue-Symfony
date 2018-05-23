@@ -48,11 +48,14 @@ class PostController extends FOSRestController implements ClassResourceInterface
      */
     public function getOneAction(Post $post): JsonResponse
     {
-        return $this->json($post);
+        $serializer = $this->container->get('jms_serializer');
+        $json = $serializer->serialize($post, 'json');
+
+        return $this->json($json);
     }
 
     /**
-     * @Rest\Get(path="/post/add")
+     * @Rest\Post(path="/post/add")
      */
     public function postAction(Request $request): JsonResponse
     {
@@ -60,7 +63,7 @@ class PostController extends FOSRestController implements ClassResourceInterface
     }
 
     /**
-     * @Rest\Get(path="/post/{id}")
+     * @Rest\Put(path="/post/{id}")
      */
     public function putAction(Request $request): JsonResponse
     {
@@ -68,7 +71,7 @@ class PostController extends FOSRestController implements ClassResourceInterface
     }
 
     /**
-     * @Rest\Get(path="/post/{id}")
+     * @Rest\Delete(path="/post/{id}")
      */
     public function deleteAction(Request $request): JsonResponse
     {

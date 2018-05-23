@@ -12,6 +12,6 @@ post:
     prefix: /api
 
 comment:
-    resource: App\Controller\Api\PostController
+    resource: App\Controller\Api\CommentController
     type: rest
     prefix: /api

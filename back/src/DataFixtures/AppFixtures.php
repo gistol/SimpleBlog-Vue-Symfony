@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Comment;
 use App\Entity\Post;
 use App\Utils\Slug;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -38,6 +39,7 @@ class AppFixtures extends Fixture
             $user->setPassword($this->passwordEncoder->encodePassword($user, 'user'));
 
             $em->persist($user);
+            $this->addReference('user' . $i, $user);
         }
 
         $user = new User();
@@ -47,7 +49,7 @@ class AppFixtures extends Fixture
         $user->setEmail('admin@email.com');
         $user->setPassword($this->passwordEncoder->encodePassword($user, 'admin'));
         $user->setRoles(['ROLE_ADMIN']);
-
+        $this->addReference('user10', $user);
         $em->persist($user);
 
         $em->flush();
@@ -62,8 +64,21 @@ class AppFixtures extends Fixture
             $post->setSlug(Slug::slugger($title));
             $post->setContent($this->faker->text(1500));
 
+            for($j = 0; $j < random_int(1, 25); $j++) {
+                $comment = new Comment();
+                $comment->setContent($this->faker->text(500));
+                $comment->setAuthor($this->getReference('user' . random_int(1, 10)));
+
+                $post->addComment($comment);
+            }
+
             $em->persist($post);
         }
         $em->flush();
+    }
+
+    private function loadComments(ObjectManager $em): void
+    {
+
     }
 }
