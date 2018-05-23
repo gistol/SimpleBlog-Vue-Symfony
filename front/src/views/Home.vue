@@ -8,6 +8,7 @@
                 </ul>
                 <ul v-else>
                     <li><button @click="logout">Logout</button></li>
+                    <li><router-link to="/">Homepage</router-link></li>
                     <li v-if="roles === 'ROLE_ADMIN'"><router-link to="/admin">Admin panel</router-link></li>
                 </ul>
             </nav>

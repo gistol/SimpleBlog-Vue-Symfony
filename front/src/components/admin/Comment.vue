@@ -1,12 +1,11 @@
 <template>
-    <div id="admin">
-        <router-view :key="$route.fullPath" />
+    <div>
+        COMMENT
     </div>
 </template>
 
 <script>
     export default {
-
     }
 </script>
 

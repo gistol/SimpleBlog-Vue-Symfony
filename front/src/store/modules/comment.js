@@ -1,26 +1,24 @@
 import Vue from 'vue';
 
 const state = {
-    comments: []
+    refresh: 0
 };
 
 const getters = {
-    comments: state => state.comments,
+    refresh: state => state.refresh
 };
 
 const actions = {
-    comments({commit}, data) {
-        Vue.http.get('comment/' + data)
+    addComment({commit}, data) {
+        Vue.http.post('comment/' + data.slug, {content: data.content})
             .then(response => response.json())
-            .then(result => {
-                commit('COMMENTS', result.comments);
-            })
+            .then(result => commit('REFRESH'));
     }
 };
 
 const mutations = {
-    COMMENTS(state, comments) {
-        state.comments = comments;
+    REFRESH(state) {
+        state.refresh = ++state.refresh;
     }
 };
 

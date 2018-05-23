@@ -1,7 +1,7 @@
 <template>
     <form @submit.prevent="login()">
-        <input type="text" v-model="loginData._username" required>
-        <input type="password" v-model="loginData._password" required>
+        <input type="text" v-model="loginData.username" required>
+        <input type="password" v-model="loginData.password" required>
         <button type="submit">Login</button>
     </form>
 </template>
@@ -13,8 +13,8 @@
         data() {
             return {
                 loginData: {
-                    _username: '',
-                    _password: ''
+                    username: '',
+                    password: ''
                 }
             }
         },

@@ -29,6 +29,11 @@ const actions = {
             .then(result => {
                 commit('POST', JSON.parse(result));
             })
+    },
+    deletePost({commit}, data) {
+        Vue.http.delete('post/' + data)
+            .then(response => response.json())
+            .then(result => result)
     }
 };
 

@@ -1,6 +1,9 @@
 security:
     encoders:
         App\Entity\User: bcrypt
+    role_hierarchy:
+        ROLE_USER:  ROLE_USER
+        ROLE_ADMIN: ROLE_ADMIN
 
     providers:
         database_users:
@@ -17,6 +20,8 @@ security:
             anonymous: true
             form_login:
                 check_path:               /api/auth/login
+                username_parameter:       username
+                password_parameter:       password
                 success_handler:          lexik_jwt_authentication.handler.authentication_success
                 failure_handler:          lexik_jwt_authentication.handler.authentication_failure
                 require_previous_session: false
@@ -24,6 +29,7 @@ security:
         api:
             pattern:   ^/api
             stateless: true
+            anonymous: true
             guard:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
@@ -32,6 +38,8 @@ security:
             anonymous: true
 
     access_control:
-        - { path: ^/api/auth/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/auth/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/auth/login,    role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/auth/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/post,          role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/admin,         role: ROLE_ADMIN }
+        - { path: ^/api,               role: IS_AUTHENTICATED_FULLY }
