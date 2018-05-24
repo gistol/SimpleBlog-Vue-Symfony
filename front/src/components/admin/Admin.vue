@@ -1,5 +1,6 @@
 <template>
     <div>
+        <router-link to="/admin/post/add">Add new post</router-link>
         <table>
             <thead>
                 <tr>

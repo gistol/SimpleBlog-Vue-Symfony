@@ -9,6 +9,7 @@
 namespace App\Controller\Api;
 
 use App\Entity\Post;
+use App\Utils\Slug;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -58,19 +59,38 @@ class PostController extends FOSRestController implements ClassResourceInterface
     }
 
     /**
-     * @Rest\Post(path="/post/add")
+     * @Rest\Post(path="/post")
      */
     public function postAction(Request $request): JsonResponse
     {
-        return $this->json($request->request->all());
+        $data = $request->request->all();
+
+        $post = new Post();
+
+        $post->setTitle($data['title']);
+        $post->setSlug(Slug::slugger($post->getTitle()));
+        $post->setContent($data['content']);
+
+        $this->em->persist($post);
+        $this->em->flush();
+
+        return $this->json('Post edit', Response::HTTP_CREATED);
     }
 
     /**
-     * @Rest\Put(path="/post/{id}")
+     * @Rest\Put(path="/post/{slug}")
      */
-    public function putAction(Request $request): JsonResponse
+    public function putAction(Post $post, Request $request): JsonResponse
     {
-        return $this->json($request->request->all());
+        $data = $request->request->all();
+        $post->setTitle($data['title']);
+        $post->setSlug(Slug::slugger($post->getTitle()));
+        $post->setContent($data['content']);
+
+        $this->em->persist($post);
+        $this->em->flush();
+
+        return $this->json('Post edit', Response::HTTP_OK);
     }
 
     /**

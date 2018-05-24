@@ -5,9 +5,7 @@ import Home from './../views/Home';
 import Admin from './../views/Admin';
 
 import AdminComponent from './../components/admin/Admin';
-import CommentShowComponent from './../components/admin/CommentShow';
 import AdminPostComponent from './../components/admin/Post';
-import CommentPostComponent from './../components/admin/Comment';
 
 import LoginComponent from './../components/auth/Login';
 import RegisterComponent from './../components/auth/Register';
@@ -38,24 +36,6 @@ export default new Router({
                     }
                 },
                 {
-                    path: '/admin/comments',
-                    name: 'adminShowComments',
-                    component: CommentShowComponent,
-                    beforeEnter: (to, from, next) => {
-                        if(localStorage.roles !== 'ROLE_ADMIN') next('/');
-                        else next();
-                    }
-                },
-                {
-                    path: '/admin/comment/edit/:id',
-                    name: 'editComment',
-                    component: CommentPostComponent,
-                    beforeEnter: (to, from, next) => {
-                        if(localStorage.roles !== 'ROLE_ADMIN') next('/');
-                        else next();
-                    }
-                },
-                {
                     path: '/admin/post/add',
                     name: 'adminAddPost',
                     component: AdminPostComponent,
@@ -68,15 +48,6 @@ export default new Router({
                     path: '/admin/post/edit/:slug',
                     name: 'adminEditPost',
                     component: AdminPostComponent,
-                    beforeEnter: (to, from, next) => {
-                        if(localStorage.roles !== 'ROLE_ADMIN') next('/');
-                        else next();
-                    }
-                },
-                {
-                    path: '/admin/comments/:id',
-                    name: 'adminCommentPaginate',
-                    component: CommentShowComponent,
                     beforeEnter: (to, from, next) => {
                         if(localStorage.roles !== 'ROLE_ADMIN') next('/');
                         else next();

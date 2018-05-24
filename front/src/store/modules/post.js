@@ -30,6 +30,16 @@ const actions = {
                 commit('POST', JSON.parse(result));
             })
     },
+    createPost({commit}, data) {
+        Vue.http.post('post', data)
+            .then(response => response.json())
+            .then(result => commit('REFRESHPOST'))
+    },
+    updatePost({commit}, data) {
+        Vue.http.put('post/' + data.slug, data)
+            .then(response => response.json())
+            .then(result => commit('REFRESHPOST'))
+    },
     deletePost({commit}, data) {
         Vue.http.delete('post/' + data)
             .then(response => response.json())
