@@ -19,7 +19,7 @@
                         </router-link>
                     </td>
                     <td>
-                        <button>Delete</button>
+                        <button @click="deletePost(post.slug)">Delete</button>
                     </td>
                 </tr>
             </tbody>
@@ -45,10 +45,13 @@
             ...mapGetters({
                 posts: 'posts',
                 number: 'number',
+                refreshPost: 'refreshPost'
             })
         },
-        created() {
-            this.getPosts(this.$route.params.id);
+        watch: {
+            refreshPost() {
+                this.getPosts(this.$route.params.id);
+            }
         },
         methods: {
             getPosts(id) {
@@ -61,6 +64,9 @@
 
                 this.$store.dispatch('posts', data);
             },
+            deletePost(slug) {
+                this.$store.dispatch('deletePost', slug);
+            },
             paginate(number) {
                 const numbers = [];
 
@@ -71,6 +77,9 @@
 
                 return numbers;
             }
+        },
+        created() {
+            this.getPosts(this.$route.params.id);
         }
     }
 </script>

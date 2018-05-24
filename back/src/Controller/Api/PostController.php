@@ -15,6 +15,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Rest\RouteResource(
@@ -25,17 +26,19 @@ use Symfony\Component\HttpFoundation\Request;
 class PostController extends FOSRestController implements ClassResourceInterface
 {
     private $em;
+    private $emp;
 
     public function __construct(EntityManagerInterface $em)
     {
-        $this->em = $em->getRepository(Post::class);
+        $this->em = $em;
+        $this->emp = $em->getRepository(Post::class);
     }
 
     public function getAction(Request $request): JsonResponse
     {
         $param = $request->query->all();
-        $posts = $this->em->findAllFromTo($param['start'], $param['limit']);
-        $numberPosts = $this->em->findNumberRows();
+        $posts = $this->emp->findAllFromTo($param['start'], $param['limit']);
+        $numberPosts = $this->emp->findNumberRows();
 
         return $this->json([
             'posts' => $posts,
@@ -71,10 +74,14 @@ class PostController extends FOSRestController implements ClassResourceInterface
     }
 
     /**
-     * @Rest\Delete(path="/post/{id}")
+     * @Rest\Delete(path="/post/{slug}")
      */
-    public function deleteAction(Request $request): JsonResponse
+    public function deleteAction(Post $post): JsonResponse
     {
-        return $this->json($request->query->all());
+        $post->setDeletedAt(new \DateTime());
+        $this->em->persist($post);
+        $this->em->flush();
+
+        return $this->json('Deleted', Response::HTTP_OK);
     }
 }

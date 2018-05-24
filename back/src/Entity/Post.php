@@ -145,4 +145,9 @@ class Post
     {
         return $this->deletedAt;
     }
+
+    public function setDeletedAt(?\DateTime $deletedAt): void
+    {
+        $this->deletedAt = $deletedAt;
+    }
 }

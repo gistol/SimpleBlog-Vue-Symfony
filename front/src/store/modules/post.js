@@ -4,14 +4,14 @@ const state = {
     posts: [],
     post: {},
     number: 0,
-    refresh: 0
+    refreshPost: 0
 };
 
 const getters = {
     posts: state => state.posts,
     post: state => state.post,
     number: state => state.number,
-    refresh: state => state.refresh,
+    refreshPost: state => state.refreshPost,
 };
 
 const actions = {
@@ -33,7 +33,7 @@ const actions = {
     deletePost({commit}, data) {
         Vue.http.delete('post/' + data)
             .then(response => response.json())
-            .then(result => result)
+            .then(result => commit('REFRESHPOST'))
     }
 };
 
@@ -47,8 +47,8 @@ const mutations = {
     NUMBER(state, number) {
         state.number = number;
     },
-    REFRESH(state) {
-        state.refresh = ++state.refresh
+    REFRESHPOST(state) {
+        state.refreshPost = ++state.refreshPost
     }
 };
 
