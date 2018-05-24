@@ -17,6 +17,7 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * @Rest\RouteResource(
@@ -27,19 +28,21 @@ use Symfony\Component\HttpFoundation\Response;
 class PostController extends FOSRestController implements ClassResourceInterface
 {
     private $em;
-    private $emp;
+    private $storage;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, TokenStorageInterface $storage)
     {
         $this->em = $em;
-        $this->emp = $em->getRepository(Post::class);
+        $this->storage = $storage;
     }
 
     public function getAction(Request $request): JsonResponse
     {
+        $emPost = $this->em->getRepository(Post::class);
+
         $param = $request->query->all();
-        $posts = $this->emp->findAllFromTo($param['start'], $param['limit']);
-        $numberPosts = $this->emp->findNumberRows();
+        $posts = $emPost->findAllFromTo($param['start'], $param['limit']);
+        $numberPosts = $emPost->findNumberRows();
 
         return $this->json([
             'posts' => $posts,
@@ -63,7 +66,16 @@ class PostController extends FOSRestController implements ClassResourceInterface
      */
     public function postAction(Request $request): JsonResponse
     {
+        $token = $this->storage->getToken();
         $data = $request->request->all();
+
+        if($user = $token->getRoles() === 'ROLE_ADMIN')
+            return $this->json('Only the admin can edit the post', Response::HTTP_UNAUTHORIZED);
+        elseif(array_key_exists('title', $data) && array_key_exists('content', $data))
+            return $this->json('Required data title and content', Response::HTTP_BAD_REQUEST);
+        elseif(strlen($data['title']) < 15 || strlen($data['content']) < 50)
+            return $this->json('Title or content is too short. title >= 15; content >= 50', Response::HTTP_BAD_REQUEST);
+
 
         $post = new Post();
 
