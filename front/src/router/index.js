@@ -36,6 +36,15 @@ export default new Router({
                     }
                 },
                 {
+                    path: '/admin/posts/:id',
+                    name: 'adminPostsPaginate',
+                    component: AdminComponent,
+                    beforeEnter: (to, from, next) => {
+                        if(localStorage.roles !== 'ROLE_ADMIN') next('/');
+                        else next();
+                    }
+                },
+                {
                     path: '/admin/post/add',
                     name: 'adminAddPost',
                     component: AdminPostComponent,
@@ -52,16 +61,7 @@ export default new Router({
                         if(localStorage.roles !== 'ROLE_ADMIN') next('/');
                         else next();
                     }
-                },
-                {
-                    path: '/admin/:id',
-                    name: 'adminPostsPaginate',
-                    component: AdminComponent,
-                    beforeEnter: (to, from, next) => {
-                        if(localStorage.roles !== 'ROLE_ADMIN') next('/');
-                        else next();
-                    }
-                },
+                }
             ]
 
         },
@@ -73,6 +73,11 @@ export default new Router({
                 {
                     path: '/',
                     name: 'posts',
+                    component: HomeComponent,
+                },
+                {
+                    path: '/posts/:id',
+                    name: 'postsPaginate',
                     component: HomeComponent,
                 },
                 {
@@ -99,11 +104,6 @@ export default new Router({
                     path: '/post/:slug',
                     name: 'post',
                     component: PostComponent
-                },
-                {
-                    path: '/:id',
-                    name: 'postsPaginate',
-                    component: HomeComponent,
                 },
             ]
         }

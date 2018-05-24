@@ -6,7 +6,7 @@
         </div>
         <ul>
             <li v-for="key in paginate(number)">
-                <router-link :to="'/' + key">{{ key }}</router-link>
+                <router-link :to="'/posts/' + key">{{ key }}</router-link>
             </li>
         </ul>
     </div>

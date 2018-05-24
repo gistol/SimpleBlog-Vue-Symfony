@@ -27,7 +27,7 @@
         </table>
         <ul>
             <li v-for="key in paginate(number)">
-                <router-link :to="'/admin/' + key">{{ key }}</router-link>
+                <router-link :to="'/admin/posts/' + key">{{ key }}</router-link>
             </li>
         </ul>
     </div>

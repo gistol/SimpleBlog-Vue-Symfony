@@ -28,11 +28,11 @@
         computed: {
             ...mapGetters({
                 post: 'post',
-                refresh: 'refresh'
+                refreshComment: 'refreshComment'
             })
         },
         watch: {
-            refresh () {
+            refreshComment () {
                 this.$store.dispatch('post', this.$route.params.slug);
             }
         },
