@@ -1,0 +1,65 @@
+#!/usr/bin/env php
+<?php
+
+$handle = fopen('php://stdin', 'r');
+
+echo "\n";
+
+echo "Now install back dependence \n";
+
+chdir('back');
+
+system('composer install');
+
+echo "Okay, install for backend is done. Now generate api token key. Do you want? \n";
+echo "If you press N, you must do it yourself \n";
+
+echo "Yes[Y] - No[n] :";
+
+$line = fgets($handle);
+$response = mb_strtolower(trim($line));
+
+echo "\n";
+
+if($response === 'y' || $response === 'yes' || $response === '') {
+    system('mkdir -p config/jwt');
+    system('openssl genrsa -out config/jwt/private.pem -aes256 4096');
+    system('openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem');
+
+    echo "If you use own password, don't forget save this in .env file \n";
+    echo "example: \n";
+    echo "JWT_PASSPHRASE=myPassword \n";
+} else {
+    echo "Don't forget generate key latter \n";
+}
+
+echo "Okay now frotend! Install npm packages \n";
+
+chdir('../front');
+
+system('npm install');
+
+
+echo "Install complete. Now generate file with public token key. Do you want? \n";
+
+echo "If you press N, you must do it yourself \n";
+
+echo "Yes[Y] - No[n] :";
+
+$line = fgets($handle);
+$response = mb_strtolower(trim($line));
+
+echo "\n";
+
+if($response === 'y' || $response === 'yes' || $response === '') {
+    system('touch src/jwt/public.js');
+    system('echo  "const publicKey = \`" >> src/jwt/public.js');
+    system('cat ../back/config/jwt/public.pem >> src/jwt/public.js');
+    system('echo  "\`;" >> src/jwt/public.js');
+    system('echo  "export default publicKey;" >> src/jwt/public.js');
+} else {
+    echo "Don't forget generate key latter \n";
+    echo "You can use example.public.js for generate public.js \n";
+}
+
+echo "Done! Don't forget create you env.js you can use example.env.js for generate env.js";

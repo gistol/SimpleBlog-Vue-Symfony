@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0ca21f10949b55ae8f0ef145133018db",
+    "content-hash": "4c9c087331d762fbca80a5b13b7b2a38",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -4693,6 +4693,42 @@
             "time": "2018-04-02T09:24:19+00:00"
         },
         {
+            "name": "ultra/glsadeplus",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/UltraProjectPl/GlsAdePlus.git",
+                "reference": "00c2128a239c6f432bc617985f7897e7087248c4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/UltraProjectPl/GlsAdePlus/zipball/00c2128a239c6f432bc617985f7897e7087248c4",
+                "reference": "00c2128a239c6f432bc617985f7897e7087248c4",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Ultra\\Library\\GLSAdePlus\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jakub Ultra Sumara",
+                    "email": "jakub.sumara09@gmail.com"
+                }
+            ],
+            "description": "A simple package to manage GLS Ade Plus",
+            "time": "2018-05-24T08:45:26+00:00"
+        },
+        {
             "name": "webmozart/assert",
             "version": "1.3.0",
             "source": {
@@ -5559,7 +5595,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "symfony/lts": 20
+        "symfony/lts": 20,
+        "ultra/glsadeplus": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
