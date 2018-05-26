@@ -1,8 +1,23 @@
 <template>
-    <div>
-        <input type="text" v-model="post.title">
-        <textarea v-model="post.content"></textarea>
-        <button @click="save">Save</button>
+    <div class="row justify-content-md-center">
+        <div class="col col-10">
+            <form class="card" @submit.prevent="register()">
+                <header class="card-header">
+                    <h2 class="text-center">Post form</h2>
+                </header>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="title">Post title: </label>
+                        <input type="text"  class="form-control" id="title"  v-model="post.title"  placeholder="Post title" title="Post title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="content">Post content: </label>
+                        <textarea class="form-control" id="content" v-model="post.content" rows="7"  placeholder="Post content" title="Post content" required></textarea>
+                    </div>
+                    <button class="btn btn-success" @click="save">Save</button>
+                </div>
+            </form>
+        </div>
     </div>
 </template>
 
@@ -23,7 +38,6 @@
         },
         watch: {
             refreshPost() {
-                console.log('asdasdasd')
                 this.$router.push({path: '/admin'})
             }
         },

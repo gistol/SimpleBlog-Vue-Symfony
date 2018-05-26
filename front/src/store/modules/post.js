@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import moment from 'moment'
 
 const state = {
     posts: [],
@@ -27,7 +28,9 @@ const actions = {
         Vue.http.get('post/' + data)
             .then(response => response.json())
             .then(result => {
-                commit('POST', JSON.parse(result));
+                const post = JSON.parse(result);
+                post.comments.forEach(comment => comment.published_at = moment(comment.published_at).fromNow())
+                commit('POST', post);
             })
     },
     createPost({commit}, data) {

@@ -20,9 +20,16 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  */
 class RegistrationController extends FOSRestController implements ClassResourceInterface
 {
+    private $passwordEncoder;
+
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $this->passwordEncoder = $passwordEncoder;
+    }
+
     public function postAction(Request $request): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
+        $data = $request->request->all();
 
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -30,7 +37,7 @@ class RegistrationController extends FOSRestController implements ClassResourceI
 
 
         if($form->isValid()) {
-            $password = $this->get('security.password_encoder')->encodePassword($user, $user->getPlainPassword());
+            $password = $this->passwordEncoder->encodePassword($user, $request->request->get('password'));
             $user->setPassword($password);
 
             $em = $this->getDoctrine()->getManager();

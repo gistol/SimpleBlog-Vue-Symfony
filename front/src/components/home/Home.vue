@@ -1,14 +1,31 @@
 <template>
     <div id="home">
-        <div v-for="post in posts">
-            <h2><router-link :to="'/post/' + post.slug">{{ post.title }}</router-link></h2>
-            <p>{{ post.content }}</p>
-        </div>
-        <ul>
-            <li v-for="key in paginate(number)">
-                <router-link :to="'/posts/' + key">{{ key }}</router-link>
-            </li>
-        </ul>
+        <article>
+            <section class="card" v-for="post in posts">
+                <header class="card-header text-center">
+                    <h2 class="card-title"><router-link :to="'/post/' + post.slug">{{ post.title }}</router-link></h2>
+                </header>
+                <div class="card-body">
+                    <p class="card-text">{{ post.content }}</p>
+                </div>
+                <div class="card-footer text-center">
+                    <router-link class="btn btn-primary center" :to="'/post/' + post.slug">Read more</router-link>
+                </div>
+            </section>
+        </article>
+        <nav>
+            <ul class="pagination">
+                <li class="page-item" :class="{ disabled:id === 1 || $route.params.id === undefined }">
+                    <router-link class="page-link" :to="'/posts/' + (id - 1)">Prev</router-link>
+                </li>
+                <li class="page-item" v-for="key in paginate(number)" :class="{ active: parseInt(key) === id }">
+                    <router-link class="page-link" :to="'/posts/' + key">{{ key }}</router-link>
+                </li>
+                <li class="page-item" :class="{ disabled: id === Math.ceil(number / limit) }">
+                    <router-link class="page-link" :to="'/posts/' + (id + 1)">Next</router-link>
+                </li>
+            </ul>
+        </nav>
     </div>
 </template>
 
@@ -18,6 +35,7 @@
     export default {
         data() {
             return {
+                id: this.$route.params.id !== undefined ? parseInt(this.$route.params.id) : 1,
                 limit: 10
             }
         },
@@ -27,8 +45,14 @@
                 number: 'number',
             })
         },
+        watch: {
+            posts() {
+                this.limitContent();
+            }
+        },
         created() {
-            this.getPosts(this.$route.params.id);
+            this.getPosts(this.id);
+            window.scrollTo(0, 0)
         },
         methods: {
             getPosts(id) {
@@ -40,6 +64,7 @@
                     data.start = 0;
 
                 this.$store.dispatch('posts', data);
+
             },
             paginate(number) {
                 const numbers = [];
@@ -50,11 +75,21 @@
                     numbers.push(i);
 
                 return numbers;
+            },
+            limitContent() {
+                this.posts.forEach(post => {
+                    if(post.content.length > 150) {
+                        post.content = post.content.substring(0, 150);
+                        post.content += ' ...'
+                    }
+                })
             }
         }
     }
 </script>
 
 <style>
-
+    .card {
+        margin-bottom: 60px;
+    }
 </style>

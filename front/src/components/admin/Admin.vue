@@ -1,8 +1,8 @@
 <template>
     <div>
-        <router-link to="/admin/post/add">Add new post</router-link>
-        <table>
-            <thead>
+        <router-link to="/admin/post/add" class="btn btn-success">Add new post</router-link>
+        <table class="table table-striped table-bordered text-center table-hover">
+            <thead  class="thead-light">
                 <tr>
                     <th>Id</th>
                     <th>Title</th>
@@ -15,12 +15,10 @@
                     <td>{{ post.id }}</td>
                     <td>{{ post.title }}</td>
                     <td>
-                        <router-link :to="'/admin/post/edit/' + post.slug">
-                            Edit
-                        </router-link>
+                        <router-link class="btn btn-info" :to="'/admin/post/edit/' + post.slug">Edit</router-link>
                     </td>
                     <td>
-                        <button @click="deletePost(post.slug)">Delete</button>
+                        <button class="btn btn-danger" @click="deletePost(post.slug)">Delete</button>
                     </td>
                 </tr>
             </tbody>
@@ -86,5 +84,7 @@
 </script>
 
 <style scoped>
-
+    .btn-success {
+        margin-bottom: 15px;
+    }
 </style>

@@ -11,5 +11,7 @@
 </script>
 
 <style>
-
+    body {
+        background-color: #ebebeb!important;
+    }
 </style>

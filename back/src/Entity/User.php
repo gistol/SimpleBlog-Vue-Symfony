@@ -40,11 +40,6 @@ class User implements UserInterface, \Serializable
      */
     private $surname;
 
-    /**@Assert\NotBlank()
-     * @Assert\Length(max=4096)
-     */
-    private $plainPassword;
-
     /**
      * @ORM\Column(name="password", type="string", length=64)
      */
@@ -103,16 +98,6 @@ class User implements UserInterface, \Serializable
     public function setSurname(string $surname): void
     {
         $this->surname = $surname;
-    }
-
-    public function getPlainPassword(): ?string
-    {
-        return $this->plainPassword;
-    }
-
-    public function setPlainPassword(string $password): void
-    {
-        $this->plainPassword = $password;
     }
 
     public function getPassword(): ?string
