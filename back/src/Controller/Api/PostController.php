@@ -9,6 +9,7 @@
 namespace App\Controller\Api;
 
 use App\Entity\Post;
+use App\Form\PostType;
 use App\Utils\Slug;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\FOSRestController;
@@ -69,24 +70,26 @@ class PostController extends FOSRestController implements ClassResourceInterface
         $token = $this->storage->getToken();
         $data = $request->request->all();
 
-        if($user = $token->getRoles() === 'ROLE_ADMIN')
+        if($token->getRoles() === 'ROLE_ADMIN')
             return $this->json('Only the admin can edit the post', Response::HTTP_UNAUTHORIZED);
-        elseif(array_key_exists('title', $data) && array_key_exists('content', $data))
-            return $this->json('Required data title and content', Response::HTTP_BAD_REQUEST);
-        elseif(strlen($data['title']) < 15 || strlen($data['content']) < 50)
-            return $this->json('Title or content is too short. title >= 15; content >= 50', Response::HTTP_BAD_REQUEST);
-
 
         $post = new Post();
 
-        $post->setTitle($data['title']);
-        $post->setSlug(Slug::slugger($post->getTitle()));
-        $post->setContent($data['content']);
+        $form = $this->createForm(PostType::class, $post);
+        $form->submit($data);
 
-        $this->em->persist($post);
-        $this->em->flush();
 
-        return $this->json('Post edit', Response::HTTP_CREATED);
+        if($form->isValid()) {
+            $post->setSlug(Slug::slugger($post->getTitle()));
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($post);
+            $em->flush();
+
+            return $this->json(['message' => 'Post success created'], Response::HTTP_CREATED);
+        }
+
+        return $this->json('Error', Response::HTTP_BAD_REQUEST);
     }
 
     /**
@@ -94,15 +97,28 @@ class PostController extends FOSRestController implements ClassResourceInterface
      */
     public function putAction(Post $post, Request $request): JsonResponse
     {
+
+        $token = $this->storage->getToken();
         $data = $request->request->all();
-        $post->setTitle($data['title']);
-        $post->setSlug(Slug::slugger($post->getTitle()));
-        $post->setContent($data['content']);
 
-        $this->em->persist($post);
-        $this->em->flush();
+        if($token->getRoles() === 'ROLE_ADMIN')
+            return $this->json('Only the admin can edit the post', Response::HTTP_UNAUTHORIZED);
 
-        return $this->json('Post edit', Response::HTTP_OK);
+        $form = $this->createForm(PostType::class, $post);
+        $form->submit($data);
+
+
+        if($form->isValid()) {
+            $post->setSlug(Slug::slugger($post->getTitle()));
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($post);
+            $em->flush();
+
+            return $this->json(['message' => 'Post success edit'], Response::HTTP_OK);
+        }
+
+        return $this->json('Error', Response::HTTP_BAD_REQUEST);
     }
 
     /**
@@ -110,6 +126,10 @@ class PostController extends FOSRestController implements ClassResourceInterface
      */
     public function deleteAction(Post $post): JsonResponse
     {
+        $token = $this->storage->getToken();
+        if($token->getRoles() === 'ROLE_ADMIN')
+            return $this->json('Only the admin can edit the post', Response::HTTP_UNAUTHORIZED);
+
         $post->setDeletedAt(new \DateTime());
         $this->em->persist($post);
         $this->em->flush();

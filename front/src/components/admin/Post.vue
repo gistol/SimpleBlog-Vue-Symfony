@@ -2,7 +2,7 @@
     <div>
         <input type="text" v-model="post.title">
         <textarea v-model="post.content"></textarea>
-        <button @click="save">Create post</button>
+        <button @click="save">Save</button>
     </div>
 </template>
 

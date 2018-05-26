@@ -4,6 +4,8 @@ namespace App\Form;
 
 use App\Entity\Post;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -12,12 +14,8 @@ class PostType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title')
-            ->add('slug')
-            ->add('content')
-            ->add('publishedAt')
-            ->add('updatedAt')
-            ->add('deletedAt')
+            ->add('title', TextType::class)
+            ->add('content', TextareaType::class)
         ;
     }
 
@@ -25,6 +23,8 @@ class PostType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Post::class,
+            'allow_extra_fields' => true,
+            'csrf_protection'    => false
         ]);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Controller\Api;
 
 use App\Entity\Comment;
 use App\Entity\Post;
+use App\Form\CommentType;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -33,38 +34,28 @@ class CommentController extends FOSRestController implements ClassResourceInterf
      */
     public function postAction(Post $post, Request $request, TokenStorageInterface $storage): JsonResponse
     {
-        $token = $storage->getToken();
+        if(!$token = $storage->getToken())
+            return $this->json('You must a logged', Response::HTTP_UNAUTHORIZED);
 
-        if($user = $token->getUser()) {
-            $content = $request->request->get('content');
+        $data = $request->request->all();
 
-            $comment = new Comment();
-            $comment->setContent($content);
-            $comment->setAuthor($user);
+        $comment = new Comment();
+
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->submit($data);
+
+
+        if($form->isValid()) {
+            $comment->setAuthor($token->getUser());
             $post->addComment($comment);
 
-            $this->em->persist($comment);
-            $this->em->flush();
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($comment);
+            $em->flush();
 
-            return $this->json('Comment add', Response::HTTP_CREATED);
+            return $this->json(['message' => 'Comment success created'], Response::HTTP_CREATED);
         }
 
-        return $this->json('Not add comment', Response::HTTP_UNAUTHORIZED);
-    }
-
-    /**
-     * @Rest\Put(path="/comment/{id}")
-     */
-    public function putAction(Request $request): JsonResponse
-    {
-        return $this->json($request->request->all());
-    }
-
-    /**
-     * @Rest\Delete(path="/comment/{id}")
-     */
-    public function deleteAction(Request $request): JsonResponse
-    {
-        return $this->json($request->query->all());
+        return $this->json('Error', Response::HTTP_BAD_REQUEST);
     }
 }
